@@ -150,3 +150,33 @@ function fetch_kraken_data($market) {
         return null;
     }
 }
+
+function fetch_mexc_data($market) {
+    // Base URL for mexc API
+    $mexc_base_url = "https://api.mexc.com/api/v3/ticker/24hr?symbol=" . $market;
+    try {
+        // Make the API request
+        $response = file_get_contents($mexc_base_url);
+        if ($response === FALSE) {
+            echo "Error: mexc API request failed.\n";
+            return null;
+        }
+        // Decode the JSON response
+        $data = json_decode($response, true);
+        // Check if the response contains the expected data
+        if (empty($data['error'])) {
+            $result = $data['symbol'];
+            // Extract price and volume
+            return [
+                'price' => (float)($data['lastPrice'] ?? 0),
+                'volume' => (float)($data['volume'] ?? 0)
+            ];
+        } else {
+            echo "Error: mexc API request failed, error: " . implode(", ", $data['error']) . "\n";
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Error fetching mexc data: " . $e->getMessage() . "\n";
+        return null;
+    }
+}
