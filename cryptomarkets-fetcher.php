@@ -180,3 +180,33 @@ function fetch_mexc_data($market) {
         return null;
     }
 }
+
+function fetch_coinex_data($market) {
+    // Base URL for CoinEx API
+    $coinex_base_url = "https://api.coinex.com/v2/spot/ticker?market=" . $market;
+    try {
+        // Make the API request
+        $response = file_get_contents($coinex_base_url);
+        if ($response === FALSE) {
+            echo "Error: CoinEx API request failed.\n";
+            return null;
+        }
+        // Decode the JSON response
+        $data = json_decode($response, true);
+        // Check if the response contains the expected data
+        if ($data['code'] === 0 && !empty($data['data'])) {
+            $result = $data['data'][0]; // Access the first element of the data array
+            // Extract price and volume
+            return [
+                'price' => (float)($result['last'] ?? 0),
+                'volume' => (float)($result['volume'] ?? 0)
+            ];
+        } else {
+            echo "Error: CoinEx API request failed, error: " . ($data['message'] ?? 'Unknown error') . "\n";
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Error fetching CoinEx data: " . $e->getMessage() . "\n";
+        return null;
+    }
+}
