@@ -15,3 +15,9 @@ echo "Price of XMR on nonkyc: " . $nonkycXMRBTC['price'] . " BTC\n";
 
 $krakenXMRBTC = fetch_kraken_data("XMRXBT");
 echo "Price of XMR on kraken: " . $krakenXMRBTC['price'] . " BTC\n";
+
+$mexcXMRUSDT = fetch_mexc_data("XMRUSDT");
+echo "Price of XMR on mexc: " . $mexcXMRUSDT['price'] . " USDT\n";
+
+$coinexXMRUSDT = fetch_coinex_data("XMRUSDT");
+echo "Price of XMR on coinex: " . $coinexXMRUSDT['price'] . " USDT\n";
