@@ -240,3 +240,33 @@ function fetch_kucoin_data($market) {
         return null;
     }
 }
+
+function fetch_bitmart_data($market) {
+    // Base URL for bitmart API
+    $bitmart_base_url = "https://api-cloud.bitmart.com/spot/quotation/v3/ticker?symbol=" . $market;
+    try {
+        // Make the API request
+        $response = file_get_contents($bitmart_base_url);
+        if ($response === FALSE) {
+            echo "Error: bitmart API request failed.\n";
+            return null;
+        }
+        // Decode the JSON response as an object
+        $data = json_decode($response);
+        // Check if the response contains the expected data
+        if ($data->code === 1000 && !empty($data->data)) {
+            $result = $data->data; // Access the data object directly
+            // Extract price and volume
+            return [
+                'price' => (float)($result->last ?? 0), // Last price
+                'volume' => (float)($result->qv_24h ?? 0)  // Volume
+            ];
+        } else {
+            echo "Error: bitmart API request failed, error: " . ($data->message ?? 'Unknown error') . "\n";
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Error fetching bitmart data: " . $e->getMessage() . "\n";
+        return null;
+    }
+}
