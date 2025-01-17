@@ -210,3 +210,33 @@ function fetch_coinex_data($market) {
         return null;
     }
 }
+
+function fetch_kucoin_data($market) {
+    // Base URL for KuCoin API
+    $kucoin_base_url = "https://api.kucoin.com/api/v1/market/stats?symbol=" . $market;
+    try {
+        // Make the API request
+        $response = file_get_contents($kucoin_base_url);
+        if ($response === FALSE) {
+            echo "Error: KuCoin API request failed.\n";
+            return null;
+        }
+        // Decode the JSON response as an object
+        $data = json_decode($response);
+        // Check if the response contains the expected data
+        if ($data->code === '200000' && !empty($data->data)) {
+            $result = $data->data; // Access the data object directly
+            // Extract price and volume
+            return [
+                'price' => (float)($result->last ?? 0), // Last price
+                'volume' => (float)($result->vol ?? 0)  // Volume
+            ];
+        } else {
+            echo "Error: KuCoin API request failed, error: " . ($data->message ?? 'Unknown error') . "\n";
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Error fetching KuCoin data: " . $e->getMessage() . "\n";
+        return null;
+    }
+}
