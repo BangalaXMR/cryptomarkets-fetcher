@@ -21,3 +21,6 @@ echo "Price of XMR on mexc: " . $mexcXMRUSDT['price'] . " USDT\n";
 
 $coinexXMRUSDT = fetch_coinex_data("XMRUSDT");
 echo "Price of XMR on coinex: " . $coinexXMRUSDT['price'] . " USDT\n";
+
+$kucoinXMRUSDT = fetch_kucoin_data("XMR-USDT");
+echo "Price of XMR on kucoin: " . $kucoinXMRUSDT['price'] . " USDT\n";
