@@ -1,5 +1,5 @@
 <?php
-include "markets.php";
+include "cryptomarkets-fetcher.php";
 
 // Example usage
 $results = [
